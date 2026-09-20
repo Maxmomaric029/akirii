@@ -1499,15 +1499,15 @@ end)()
 local Config = Modules["core/config"]
 local Notif = Modules["utils/notifications"]
 
--- main.luau - Akiri Hub con WindUI Library
+-- main.luau - Akiri Hub con WindUI Library (Sintaxis Oficial)
 
 
 -- Inicializar Módulos de Combate, ESP y Misc
 
 -- Cargar WindUI Library
-local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
 
--- Crear Ventana Principal de WindUI
+-- Crear Ventana Principal
 local Window = WindUI:CreateWindow({
     Title = "Akiri Hub",
     Icon = "crosshair",
@@ -1520,13 +1520,17 @@ Notif.Notify("Akiri Hub", "¡Cargado exitosamente con WindUI!", 5)
 -- ==========================================
 -- TAB COMBAT
 -- ==========================================
-local TabCombat = Window:AddTab({
+local TabCombat = Window:Tab({
     Title = "Combat",
     Icon = "swords"
 })
 
 -- Section Aimbot
-TabCombat:AddToggle({
+local SectionAimbot = TabCombat:Section({
+    Title = "Aimbot (Hold Right Click)"
+})
+
+SectionAimbot:Toggle({
     Title = "Aimbot Enabled",
     Value = Config.Combat.Aimbot.Enabled,
     Callback = function(state)
@@ -1535,7 +1539,7 @@ TabCombat:AddToggle({
     end
 })
 
-TabCombat:AddDropdown({
+SectionAimbot:Dropdown({
     Title = "Aim Method",
     Values = {"Camera", "Mouse"},
     Value = Config.Combat.Aimbot.Type,
@@ -1544,7 +1548,7 @@ TabCombat:AddDropdown({
     end
 })
 
-TabCombat:AddSlider({
+SectionAimbot:Slider({
     Title = "Smoothness",
     Min = 1,
     Max = 20,
@@ -1554,7 +1558,7 @@ TabCombat:AddSlider({
     end
 })
 
-TabCombat:AddDropdown({
+SectionAimbot:Dropdown({
     Title = "Target Hitbox (Aimbot)",
     Values = {"Head", "Torso", "UpperTorso", "HumanoidRootPart", "Left Arm", "Right Arm", "Left Leg", "Right Leg"},
     Value = Config.Combat.Aimbot.TargetPart,
@@ -1563,7 +1567,7 @@ TabCombat:AddDropdown({
     end
 })
 
-TabCombat:AddSlider({
+SectionAimbot:Slider({
     Title = "Aimbot FOV",
     Min = 5,
     Max = 180,
@@ -1574,7 +1578,11 @@ TabCombat:AddSlider({
 })
 
 -- Section Silent Aim
-TabCombat:AddToggle({
+local SectionSilent = TabCombat:Section({
+    Title = "Silent Aim"
+})
+
+SectionSilent:Toggle({
     Title = "Silent Aim Enabled",
     Value = Config.Combat.SilentAim,
     Callback = function(state)
@@ -1583,7 +1591,7 @@ TabCombat:AddToggle({
     end
 })
 
-TabCombat:AddSlider({
+SectionSilent:Slider({
     Title = "Hit Chance (%)",
     Min = 0,
     Max = 100,
@@ -1593,7 +1601,7 @@ TabCombat:AddSlider({
     end
 })
 
-TabCombat:AddDropdown({
+SectionSilent:Dropdown({
     Title = "Hit Sound Effect",
     Values = {"Gamesense", "GamesenseOld", "Neverlose"},
     Value = Config.Combat.HitSound,
@@ -1602,7 +1610,7 @@ TabCombat:AddDropdown({
     end
 })
 
-TabCombat:AddToggle({
+SectionSilent:Toggle({
     Title = "Team Check (Silent)",
     Value = Config.Combat.TeamCheck,
     Callback = function(state)
@@ -1610,7 +1618,7 @@ TabCombat:AddToggle({
     end
 })
 
-TabCombat:AddDropdown({
+SectionSilent:Dropdown({
     Title = "Target Hitbox (Silent)",
     Values = {"Head", "Torso", "UpperTorso", "HumanoidRootPart", "Left Arm", "Right Arm", "Left Leg", "Right Leg", "Random"},
     Value = Config.Combat.TargetPart,
@@ -1619,7 +1627,7 @@ TabCombat:AddDropdown({
     end
 })
 
-TabCombat:AddSlider({
+SectionSilent:Slider({
     Title = "Silent FOV Radius",
     Min = 5,
     Max = 180,
@@ -1632,13 +1640,15 @@ TabCombat:AddSlider({
 -- ==========================================
 -- TAB ESP (VISUALS)
 -- ==========================================
-local TabESP = Window:AddTab({
+local TabESP = Window:Tab({
     Title = "Visuals (ESP)",
     Icon = "eye"
 })
 
 -- General ESP
-TabESP:AddToggle({
+local SectionGeneral = TabESP:Section({ Title = "General" })
+
+SectionGeneral:Toggle({
     Title = "Master ESP Enabled",
     Value = Config.ESP.Enabled,
     Callback = function(state)
@@ -1647,7 +1657,7 @@ TabESP:AddToggle({
     end
 })
 
-TabESP:AddToggle({
+SectionGeneral:Toggle({
     Title = "Team Check",
     Value = Config.ESP.TeamCheck,
     Callback = function(state)
@@ -1655,7 +1665,7 @@ TabESP:AddToggle({
     end
 })
 
-TabESP:AddSlider({
+SectionGeneral:Slider({
     Title = "Max Distance",
     Min = 100,
     Max = 5000,
@@ -1665,7 +1675,7 @@ TabESP:AddSlider({
     end
 })
 
-TabESP:AddToggle({
+SectionGeneral:Toggle({
     Title = "Visible Check",
     Value = Config.ESP.VisibleCheck,
     Callback = function(state)
@@ -1674,7 +1684,9 @@ TabESP:AddToggle({
 })
 
 -- Box ESP
-TabESP:AddToggle({
+local SectionBox = TabESP:Section({ Title = "Box" })
+
+SectionBox:Toggle({
     Title = "Box ESP Enabled",
     Value = Config.ESP.Box.Enabled,
     Callback = function(state)
@@ -1682,7 +1694,7 @@ TabESP:AddToggle({
     end
 })
 
-TabESP:AddDropdown({
+SectionBox:Dropdown({
     Title = "Box Type",
     Values = {"2D", "Corner"},
     Value = Config.ESP.Box.Type,
@@ -1691,7 +1703,7 @@ TabESP:AddDropdown({
     end
 })
 
-TabESP:AddColorpicker({
+SectionBox:Colorpicker({
     Title = "Box Color",
     Default = Config.ESP.Box.Color,
     Callback = function(color)
@@ -1699,7 +1711,7 @@ TabESP:AddColorpicker({
     end
 })
 
-TabESP:AddSlider({
+SectionBox:Slider({
     Title = "Box Thickness",
     Min = 1,
     Max = 5,
@@ -1709,7 +1721,7 @@ TabESP:AddSlider({
     end
 })
 
-TabESP:AddSlider({
+SectionBox:Slider({
     Title = "Box Transparency",
     Min = 0.1,
     Max = 1,
@@ -1720,7 +1732,9 @@ TabESP:AddSlider({
 })
 
 -- Player ESP
-TabESP:AddToggle({
+local SectionPlayer = TabESP:Section({ Title = "Player" })
+
+SectionPlayer:Toggle({
     Title = "Player Names",
     Value = Config.ESP.Player.Names,
     Callback = function(state)
@@ -1728,7 +1742,7 @@ TabESP:AddToggle({
     end
 })
 
-TabESP:AddToggle({
+SectionPlayer:Toggle({
     Title = "Player Health",
     Value = Config.ESP.Player.Health,
     Callback = function(state)
@@ -1736,7 +1750,7 @@ TabESP:AddToggle({
     end
 })
 
-TabESP:AddToggle({
+SectionPlayer:Toggle({
     Title = "Player Distance",
     Value = Config.ESP.Player.Distance,
     Callback = function(state)
@@ -1744,7 +1758,7 @@ TabESP:AddToggle({
     end
 })
 
-TabESP:AddToggle({
+SectionPlayer:Toggle({
     Title = "Player Weapon",
     Value = Config.ESP.Player.Weapon,
     Callback = function(state)
@@ -1752,7 +1766,7 @@ TabESP:AddToggle({
     end
 })
 
-TabESP:AddColorpicker({
+SectionPlayer:Colorpicker({
     Title = "Names Color",
     Default = Config.ESP.Player.NamesColor,
     Callback = function(color)
@@ -1761,7 +1775,9 @@ TabESP:AddColorpicker({
 })
 
 -- Skeleton ESP
-TabESP:AddToggle({
+local SectionSkeleton = TabESP:Section({ Title = "Skeleton" })
+
+SectionSkeleton:Toggle({
     Title = "Skeleton Enabled",
     Value = Config.ESP.Skeleton.Enabled,
     Callback = function(state)
@@ -1769,7 +1785,7 @@ TabESP:AddToggle({
     end
 })
 
-TabESP:AddColorpicker({
+SectionSkeleton:Colorpicker({
     Title = "Skeleton Color",
     Default = Config.ESP.Skeleton.Color,
     Callback = function(color)
@@ -1777,7 +1793,7 @@ TabESP:AddColorpicker({
     end
 })
 
-TabESP:AddSlider({
+SectionSkeleton:Slider({
     Title = "Skeleton Thickness",
     Min = 1,
     Max = 5,
@@ -1787,7 +1803,7 @@ TabESP:AddSlider({
     end
 })
 
-TabESP:AddSlider({
+SectionSkeleton:Slider({
     Title = "Skeleton Transparency",
     Min = 0.1,
     Max = 1,
@@ -1798,7 +1814,9 @@ TabESP:AddSlider({
 })
 
 -- Misc ESP
-TabESP:AddToggle({
+local SectionMisc = TabESP:Section({ Title = "Misc" })
+
+SectionMisc:Toggle({
     Title = "Show Teammates",
     Value = Config.ESP.Misc.ShowTeammates,
     Callback = function(state)
@@ -1806,7 +1824,7 @@ TabESP:AddToggle({
     end
 })
 
-TabESP:AddToggle({
+SectionMisc:Toggle({
     Title = "Out of View Arrows",
     Value = Config.ESP.Misc.Arrows,
     Callback = function(state)
@@ -1814,7 +1832,7 @@ TabESP:AddToggle({
     end
 })
 
-TabESP:AddColorpicker({
+SectionMisc:Colorpicker({
     Title = "Arrows Color",
     Default = Config.ESP.Misc.ArrowsColor,
     Callback = function(color)
@@ -1825,12 +1843,14 @@ TabESP:AddColorpicker({
 -- ==========================================
 -- TAB SKINS
 -- ==========================================
-local TabSkins = Window:AddTab({
+local TabSkins = Window:Tab({
     Title = "Skins",
     Icon = "palette"
 })
 
-TabSkins:AddToggle({
+local SectionGeneralSkins = TabSkins:Section({ Title = "Skin Changer" })
+
+SectionGeneralSkins:Toggle({
     Title = "Enable Skin Changer",
     Value = Config.SkinChanger.Enabled,
     Callback = function(state)
@@ -1839,7 +1859,9 @@ TabSkins:AddToggle({
     end
 })
 
-TabSkins:AddToggle({
+local SectionKnives = TabSkins:Section({ Title = "Custom Knives" })
+
+SectionKnives:Toggle({
     Title = "Enable Custom Knife",
     Value = Config.SkinChanger.CustomKnifeEnabled,
     Callback = function(state)
@@ -1848,7 +1870,7 @@ TabSkins:AddToggle({
     end
 })
 
-TabSkins:AddDropdown({
+SectionKnives:Dropdown({
     Title = "Select Custom Knife",
     Values = {"Butterfly Knife", "Karambit", "M9 Bayonet", "Flip Knife", "Gut Knife"},
     Value = Config.SkinChanger.SelectedKnife,
@@ -1858,4 +1880,4 @@ TabSkins:AddDropdown({
     end
 })
 
-print("[Akiri Hub] Interfaz convertida a WindUI con éxito.")
+print("[Akiri Hub] Interfaz convertida a la API nativa de WindUI con éxito.")
