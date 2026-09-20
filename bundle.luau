@@ -1499,400 +1499,363 @@ end)()
 local Config = Modules["core/config"]
 local Notif = Modules["utils/notifications"]
 
--- main.luau - Script principal de Akiri Hub
+-- main.luau - Akiri Hub con WindUI Library
 
 
--- Inicializar Módulos
+-- Inicializar Módulos de Combate, ESP y Misc
 
--- Cargar Neverlose UI Library
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostDuckyy/UI-Libraries/main/Neverlose/source.lua"))()
+-- Cargar WindUI Library
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
--- Notificación de inicio
-Notif.Notify("Akiri Hub", "¡Cargado con Gamesense & Neverlose Hitsounds!", 5)
-
--- Crear Ventana Principal
-local Window = Library:Window({ text = "Akiri Hub" })
-
--- ==========================================
--- TAB SECTION: COMBAT
--- ==========================================
-local TabSectionCombat = Window:TabSection({ text = "Combat" })
-local TabCombat = TabSectionCombat:Tab({
-    text = "Aimbot & Silent",
-    icon = "rbxassetid://7999345313",
+-- Crear Ventana Principal de WindUI
+local Window = WindUI:CreateWindow({
+    Title = "Akiri Hub",
+    Icon = "crosshair",
+    Author = "Akiri Team",
+    Folder = "AkiriConfig"
 })
 
--- SECTION: AIMBOT
-local SectionAimbot = TabCombat:Section({ text = "Aimbot (Hold Right Click)" })
+Notif.Notify("Akiri Hub", "¡Cargado exitosamente con WindUI!", 5)
 
-SectionAimbot:Toggle({
-    text = "Aimbot Enabled",
-    state = Config.Combat.Aimbot.Enabled,
-    callback = function(state)
+-- ==========================================
+-- TAB COMBAT
+-- ==========================================
+local TabCombat = Window:AddTab({
+    Title = "Combat",
+    Icon = "swords"
+})
+
+-- Section Aimbot
+TabCombat:AddToggle({
+    Title = "Aimbot Enabled",
+    Value = Config.Combat.Aimbot.Enabled,
+    Callback = function(state)
         Config.Combat.Aimbot.Enabled = state
         Notif.Notify("Aimbot", state and "Activado" or "Desactivado", 2)
     end
 })
 
-SectionAimbot:Dropdown({
-    text = "Aim Method",
-    list = {"Camera", "Mouse"},
-    default = Config.Combat.Aimbot.Type,
-    callback = function(method)
+TabCombat:AddDropdown({
+    Title = "Aim Method",
+    Values = {"Camera", "Mouse"},
+    Value = Config.Combat.Aimbot.Type,
+    Callback = function(method)
         Config.Combat.Aimbot.Type = method
-        Notif.Notify("Aimbot Method", "Cambiado a: " .. method, 2)
     end
 })
 
-SectionAimbot:Slider({
-    text = "Smoothness",
-    min = 1,
-    max = 20,
-    default = Config.Combat.Aimbot.Smoothness,
-    callback = function(val)
+TabCombat:AddSlider({
+    Title = "Smoothness",
+    Min = 1,
+    Max = 20,
+    Value = Config.Combat.Aimbot.Smoothness,
+    Callback = function(val)
         Config.Combat.Aimbot.Smoothness = val
     end
 })
 
-SectionAimbot:Dropdown({
-    text = "Target Hitbox",
-    list = {"Head", "Torso", "UpperTorso", "HumanoidRootPart", "Left Arm", "Right Arm", "Left Leg", "Right Leg"},
-    default = Config.Combat.Aimbot.TargetPart,
-    callback = function(part)
+TabCombat:AddDropdown({
+    Title = "Target Hitbox (Aimbot)",
+    Values = {"Head", "Torso", "UpperTorso", "HumanoidRootPart", "Left Arm", "Right Arm", "Left Leg", "Right Leg"},
+    Value = Config.Combat.Aimbot.TargetPart,
+    Callback = function(part)
         Config.Combat.Aimbot.TargetPart = part
     end
 })
 
-SectionAimbot:Slider({
-    text = "Aimbot FOV",
-    min = 5,
-    max = 180,
-    default = Config.Combat.Aimbot.FOV,
-    callback = function(value)
+TabCombat:AddSlider({
+    Title = "Aimbot FOV",
+    Min = 5,
+    Max = 180,
+    Value = Config.Combat.Aimbot.FOV,
+    Callback = function(value)
         Config.Combat.Aimbot.FOV = value
     end
 })
 
--- SECTION: SILENT AIM
-local SectionSilent = TabCombat:Section({ text = "Silent Aim" })
-
-SectionSilent:Toggle({
-    text = "Silent Aim Enabled",
-    state = Config.Combat.SilentAim,
-    callback = function(state)
+-- Section Silent Aim
+TabCombat:AddToggle({
+    Title = "Silent Aim Enabled",
+    Value = Config.Combat.SilentAim,
+    Callback = function(state)
         Config.Combat.SilentAim = state
         Notif.Notify("Silent Aim", state and "Activado" or "Desactivado", 2)
     end
 })
 
-SectionSilent:Slider({
-    text = "Hit Chance (%)",
-    min = 0,
-    max = 100,
-    default = Config.Combat.HitChance,
-    callback = function(val)
+TabCombat:AddSlider({
+    Title = "Hit Chance (%)",
+    Min = 0,
+    Max = 100,
+    Value = Config.Combat.HitChance,
+    Callback = function(val)
         Config.Combat.HitChance = val
     end
 })
 
-SectionSilent:Dropdown({
-    text = "Hit Sound Effect",
-    list = {"Gamesense", "GamesenseOld", "Neverlose"},
-    default = Config.Combat.HitSound,
-    callback = function(soundName)
+TabCombat:AddDropdown({
+    Title = "Hit Sound Effect",
+    Values = {"Gamesense", "GamesenseOld", "Neverlose"},
+    Value = Config.Combat.HitSound,
+    Callback = function(soundName)
         Config.Combat.HitSound = soundName
-        Notif.Notify("Hit Sound", "Cambiado a: " .. soundName, 2)
     end
 })
 
-SectionSilent:Toggle({
-    text = "Team Check",
-    state = Config.Combat.TeamCheck,
-    callback = function(state)
+TabCombat:AddToggle({
+    Title = "Team Check (Silent)",
+    Value = Config.Combat.TeamCheck,
+    Callback = function(state)
         Config.Combat.TeamCheck = state
     end
 })
 
-SectionSilent:Dropdown({
-    text = "Target Hitbox",
-    list = {"Head", "Torso", "UpperTorso", "HumanoidRootPart", "Left Arm", "Right Arm", "Left Leg", "Right Leg", "Random"},
-    default = Config.Combat.TargetPart,
-    callback = function(part)
+TabCombat:AddDropdown({
+    Title = "Target Hitbox (Silent)",
+    Values = {"Head", "Torso", "UpperTorso", "HumanoidRootPart", "Left Arm", "Right Arm", "Left Leg", "Right Leg", "Random"},
+    Value = Config.Combat.TargetPart,
+    Callback = function(part)
         Config.Combat.TargetPart = part
     end
 })
 
-SectionSilent:Slider({
-    text = "Silent FOV Radius",
-    min = 5,
-    max = 180,
-    default = Config.Combat.FOV,
-    callback = function(value)
+TabCombat:AddSlider({
+    Title = "Silent FOV Radius",
+    Min = 5,
+    Max = 180,
+    Value = Config.Combat.FOV,
+    Callback = function(value)
         Config.Combat.FOV = value
     end
 })
 
 -- ==========================================
--- TAB SECTION: ESP
+-- TAB ESP (VISUALS)
 -- ==========================================
-local TabSectionESP = Window:TabSection({ text = "ESP" })
-local TabESP = TabSectionESP:Tab({
-    text = "Visuals",
-    icon = "rbxassetid://7999345313",
+local TabESP = Window:AddTab({
+    Title = "Visuals (ESP)",
+    Icon = "eye"
 })
 
--- 1. SECTION: GENERAL
-local SectionGeneral = TabESP:Section({ text = "General" })
-
-SectionGeneral:Toggle({
-    text = "Enabled",
-    state = Config.ESP.Enabled,
-    callback = function(state)
+-- General ESP
+TabESP:AddToggle({
+    Title = "Master ESP Enabled",
+    Value = Config.ESP.Enabled,
+    Callback = function(state)
         Config.ESP.Enabled = state
         Notif.Notify("Master ESP", state and "Activado" or "Desactivado", 2)
     end
 })
 
-SectionGeneral:Toggle({
-    text = "Team Check",
-    state = Config.ESP.TeamCheck,
-    callback = function(state)
+TabESP:AddToggle({
+    Title = "Team Check",
+    Value = Config.ESP.TeamCheck,
+    Callback = function(state)
         Config.ESP.TeamCheck = state
     end
 })
 
-SectionGeneral:Slider({
-    text = "Max Distance",
-    min = 100,
-    max = 5000,
-    default = Config.ESP.MaxDistance,
-    callback = function(val)
+TabESP:AddSlider({
+    Title = "Max Distance",
+    Min = 100,
+    Max = 5000,
+    Value = Config.ESP.MaxDistance,
+    Callback = function(val)
         Config.ESP.MaxDistance = val
     end
 })
 
-SectionGeneral:Toggle({
-    text = "Visible Check",
-    state = Config.ESP.VisibleCheck,
-    callback = function(state)
+TabESP:AddToggle({
+    Title = "Visible Check",
+    Value = Config.ESP.VisibleCheck,
+    Callback = function(state)
         Config.ESP.VisibleCheck = state
     end
 })
 
--- 2. SECTION: BOX
-local SectionBox = TabESP:Section({ text = "Box" })
-
-SectionBox:Toggle({
-    text = "Enabled",
-    state = Config.ESP.Box.Enabled,
-    callback = function(state)
+-- Box ESP
+TabESP:AddToggle({
+    Title = "Box ESP Enabled",
+    Value = Config.ESP.Box.Enabled,
+    Callback = function(state)
         Config.ESP.Box.Enabled = state
     end
 })
 
-SectionBox:Dropdown({
-    text = "Box Type",
-    list = {"2D", "Corner"},
-    default = Config.ESP.Box.Type,
-    callback = function(boxType)
+TabESP:AddDropdown({
+    Title = "Box Type",
+    Values = {"2D", "Corner"},
+    Value = Config.ESP.Box.Type,
+    Callback = function(boxType)
         Config.ESP.Box.Type = boxType
     end
 })
 
-SectionBox:Colorpicker({
-    text = "Color",
-    color = Config.ESP.Box.Color,
-    callback = function(color)
+TabESP:AddColorpicker({
+    Title = "Box Color",
+    Default = Config.ESP.Box.Color,
+    Callback = function(color)
         Config.ESP.Box.Color = color
     end
 })
 
-SectionBox:Slider({
-    text = "Thickness",
-    min = 1,
-    max = 5,
-    default = Config.ESP.Box.Thickness,
-    callback = function(val)
+TabESP:AddSlider({
+    Title = "Box Thickness",
+    Min = 1,
+    Max = 5,
+    Value = Config.ESP.Box.Thickness,
+    Callback = function(val)
         Config.ESP.Box.Thickness = val
     end
 })
 
-SectionBox:Slider({
-    text = "Transparency",
-    min = 0.1,
-    max = 1,
-    default = Config.ESP.Box.Transparency,
-    callback = function(val)
+TabESP:AddSlider({
+    Title = "Box Transparency",
+    Min = 0.1,
+    Max = 1,
+    Value = Config.ESP.Box.Transparency,
+    Callback = function(val)
         Config.ESP.Box.Transparency = val
     end
 })
 
--- 3. SECTION: PLAYER
-local SectionPlayer = TabESP:Section({ text = "Player" })
-
-SectionPlayer:Toggle({
-    text = "Names",
-    state = Config.ESP.Player.Names,
-    callback = function(state)
+-- Player ESP
+TabESP:AddToggle({
+    Title = "Player Names",
+    Value = Config.ESP.Player.Names,
+    Callback = function(state)
         Config.ESP.Player.Names = state
     end
 })
 
-SectionPlayer:Toggle({
-    text = "Health",
-    state = Config.ESP.Player.Health,
-    callback = function(state)
+TabESP:AddToggle({
+    Title = "Player Health",
+    Value = Config.ESP.Player.Health,
+    Callback = function(state)
         Config.ESP.Player.Health = state
     end
 })
 
-SectionPlayer:Toggle({
-    text = "Distance",
-    state = Config.ESP.Player.Distance,
-    callback = function(state)
+TabESP:AddToggle({
+    Title = "Player Distance",
+    Value = Config.ESP.Player.Distance,
+    Callback = function(state)
         Config.ESP.Player.Distance = state
     end
 })
 
-SectionPlayer:Toggle({
-    text = "Weapon",
-    state = Config.ESP.Player.Weapon,
-    callback = function(state)
+TabESP:AddToggle({
+    Title = "Player Weapon",
+    Value = Config.ESP.Player.Weapon,
+    Callback = function(state)
         Config.ESP.Player.Weapon = state
     end
 })
 
-SectionPlayer:Colorpicker({
-    text = "Names Color",
-    color = Config.ESP.Player.NamesColor,
-    callback = function(color)
+TabESP:AddColorpicker({
+    Title = "Names Color",
+    Default = Config.ESP.Player.NamesColor,
+    Callback = function(color)
         Config.ESP.Player.NamesColor = color
     end
 })
 
--- 4. SECTION: SKELETON
-local SectionSkeleton = TabESP:Section({ text = "Skeleton" })
-
-SectionSkeleton:Toggle({
-    text = "Enabled",
-    state = Config.ESP.Skeleton.Enabled,
-    callback = function(state)
+-- Skeleton ESP
+TabESP:AddToggle({
+    Title = "Skeleton Enabled",
+    Value = Config.ESP.Skeleton.Enabled,
+    Callback = function(state)
         Config.ESP.Skeleton.Enabled = state
     end
 })
 
-SectionSkeleton:Colorpicker({
-    text = "Color",
-    color = Config.ESP.Skeleton.Color,
-    callback = function(color)
+TabESP:AddColorpicker({
+    Title = "Skeleton Color",
+    Default = Config.ESP.Skeleton.Color,
+    Callback = function(color)
         Config.ESP.Skeleton.Color = color
     end
 })
 
-SectionSkeleton:Slider({
-    text = "Thickness",
-    min = 1,
-    max = 5,
-    default = Config.ESP.Skeleton.Thickness,
-    callback = function(val)
+TabESP:AddSlider({
+    Title = "Skeleton Thickness",
+    Min = 1,
+    Max = 5,
+    Value = Config.ESP.Skeleton.Thickness,
+    Callback = function(val)
         Config.ESP.Skeleton.Thickness = val
     end
 })
 
-SectionSkeleton:Slider({
-    text = "Transparency",
-    min = 0.1,
-    max = 1,
-    default = Config.ESP.Skeleton.Transparency,
-    callback = function(val)
+TabESP:AddSlider({
+    Title = "Skeleton Transparency",
+    Min = 0.1,
+    Max = 1,
+    Value = Config.ESP.Skeleton.Transparency,
+    Callback = function(val)
         Config.ESP.Skeleton.Transparency = val
     end
 })
 
--- 5. SECTION: MISC
-local SectionMisc = TabESP:Section({ text = "Misc" })
-
-SectionMisc:Toggle({
-    text = "Show Teammates",
-    state = Config.ESP.Misc.ShowTeammates,
-    callback = function(state)
+-- Misc ESP
+TabESP:AddToggle({
+    Title = "Show Teammates",
+    Value = Config.ESP.Misc.ShowTeammates,
+    Callback = function(state)
         Config.ESP.Misc.ShowTeammates = state
     end
 })
 
-SectionMisc:Toggle({
-    text = "Out of View Arrows",
-    state = Config.ESP.Misc.Arrows,
-    callback = function(state)
+TabESP:AddToggle({
+    Title = "Out of View Arrows",
+    Value = Config.ESP.Misc.Arrows,
+    Callback = function(state)
         Config.ESP.Misc.Arrows = state
     end
 })
 
-SectionMisc:Colorpicker({
-    text = "Arrows Color",
-    color = Config.ESP.Misc.ArrowsColor,
-    callback = function(color)
+TabESP:AddColorpicker({
+    Title = "Arrows Color",
+    Default = Config.ESP.Misc.ArrowsColor,
+    Callback = function(color)
         Config.ESP.Misc.ArrowsColor = color
     end
 })
 
 -- ==========================================
--- TAB SECTION: SKINS
+-- TAB SKINS
 -- ==========================================
-local TabSectionSkins = Window:TabSection({ text = "Skins" })
-local TabSkins = TabSectionSkins:Tab({
-    text = "Skin Changer",
-    icon = "rbxassetid://7999345313",
+local TabSkins = Window:AddTab({
+    Title = "Skins",
+    Icon = "palette"
 })
 
-local SectionSkinChanger = TabSkins:Section({ text = "General Skins" })
-
-SectionSkinChanger:Toggle({
-    text = "Enable Skin Changer",
-    state = Config.SkinChanger.Enabled,
-    callback = function(state)
+TabSkins:AddToggle({
+    Title = "Enable Skin Changer",
+    Value = Config.SkinChanger.Enabled,
+    Callback = function(state)
         Config.SkinChanger.Enabled = state
         Notif.Notify("Skin Changer", state and "Activado" or "Desactivado", 2)
     end
 })
 
-local SectionKnives = TabSkins:Section({ text = "Custom Knives" })
-
-SectionKnives:Toggle({
-    text = "Enable Custom Knife",
-    state = Config.SkinChanger.CustomKnifeEnabled,
-    callback = function(state)
+TabSkins:AddToggle({
+    Title = "Enable Custom Knife",
+    Value = Config.SkinChanger.CustomKnifeEnabled,
+    Callback = function(state)
         Config.SkinChanger.CustomKnifeEnabled = state
         Notif.Notify("Custom Knife", state and "Activado" or "Desactivado", 2)
     end
 })
 
-SectionKnives:Dropdown({
-    text = "Select Custom Knife",
-    list = {"Butterfly Knife", "Karambit", "M9 Bayonet", "Flip Knife", "Gut Knife"},
-    default = Config.SkinChanger.SelectedKnife,
-    callback = function(knife)
+TabSkins:AddDropdown({
+    Title = "Select Custom Knife",
+    Values = {"Butterfly Knife", "Karambit", "M9 Bayonet", "Flip Knife", "Gut Knife"},
+    Value = Config.SkinChanger.SelectedKnife,
+    Callback = function(knife)
         Config.SkinChanger.SelectedKnife = knife
         Notif.Notify("Knife Selected", knife, 2)
     end
 })
 
--- ==========================================
--- TAB SECTION: SETTINGS
--- ==========================================
-local TabSectionSettings = Window:TabSection({ text = "Settings" })
-local TabSettings = TabSectionSettings:Tab({
-    text = "UI Settings",
-    icon = "rbxassetid://7999345313",
-})
-local SectionUI = TabSettings:Section({ text = "Menu Options" })
-
-SectionUI:Keybind({
-    text = "Toggle UI Keybind",
-    default = Enum.KeyCode.RightControl,
-    callback = function()
-        Library:Toggle()
-    end
-})
-
-print("[Akiri Hub] Hitsounds actualizados a Gamesense y Neverlose.")
+print("[Akiri Hub] Interfaz convertida a WindUI con éxito.")
