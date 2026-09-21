@@ -6,7 +6,6 @@ local Modules = {}
 
 -- 1. CORE CONFIG
 Modules["core/config"] = (function()
--- core/config.luau - Configuración centralizada de Akiri Hub
 
 local Config = {
     Notifications = true,
@@ -14,7 +13,7 @@ local Config = {
     Combat = {
         SilentAim = false,
         HitChance = 100,
-        HitSound = "Gamesense", -- "Gamesense", "GamesenseOld", "Neverlose"
+        HitSound = "Gamesense",
         FOV = 25,
         TeamCheck = true,
         TargetPart = "Head",
@@ -87,29 +86,25 @@ end)()
 
 -- 2. CORE SOUNDS
 Modules["core/sounds"] = (function()
--- core/sounds.luau - Catálogo de Sonidos Modernos y Hitsounds para Akiri Hub
 
 local SoundService = game:GetService("SoundService")
 
 local Sounds = {
-    -- Sonidos de Interfaz (UI)
-    Notification = "rbxassetid://5453349528", -- Modern Pop / Discord Style
-    Click        = "rbxassetid://535716488",  -- Subtle Clean Click
-    Toggle       = "rbxassetid://6895079853", -- Modern Switch On/Off
-    Hover        = "rbxassetid://9114223280", -- Soft Hover
+    Notification = "rbxassetid://5453349528",
+    Click        = "rbxassetid://535716488",
+    Toggle       = "rbxassetid://6895079853",
+    Hover        = "rbxassetid://9114223280",
     
-    -- Hitsounds de Combate
-    GamesenseOld = "rbxassetid://4817809188",   -- Gamesense Hitmarker FIX
-    Gamesense    = "rbxassetid://94204395881101",-- Gamesense Hitsound Modern
-    Neverlose    = "rbxassetid://139452805868562",-- Neverlose.cc Hitsound
+    GamesenseOld = "rbxassetid://4817809188",
+    Gamesense    = "rbxassetid://94204395881101",
+    Neverlose    = "rbxassetid://139452805868562",
     
-    -- Compatibilidad previa
     Hitmarker    = "rbxassetid://94204395881101",
     Headshot     = "rbxassetid://139452805868562",
 }
 
 local SoundSystem = {}
-SoundSystem.CurrentHitSound = "Gamesense" -- Default: Gamesense
+SoundSystem.CurrentHitSound = "Gamesense"
 
 function SoundSystem.Play(soundName)
     local id = Sounds[soundName] or Sounds[SoundSystem.CurrentHitSound] or Sounds.Gamesense
@@ -137,7 +132,6 @@ end)()
 -- 3. UTILS ESP_UTILS
 Modules["utils/esp_utils"] = (function()
     local Config = Modules["core/config"]
--- utils/esp_utils.luau - Funciones de ayuda para verificaciones de ESP
 
 local Players = game:GetService("Players")
 local Camera = workspace.CurrentCamera
@@ -150,7 +144,7 @@ function ESPUtils.IsTeamMate(player)
     if not Config.ESP.TeamCheck then return false end
     
     if Config.ESP.Misc.ShowTeammates then
-        return false -- Trata a los compañeros como enemigos para mostrarlos
+        return false
     end
 
     local team = player:GetAttribute("Team") or (player.Team and player.Team.Name)
@@ -210,7 +204,7 @@ end)()
 -- 4. UTILS NOTIFICATIONS
 Modules["utils/notifications"] = (function()
     local Sounds = Modules["core/sounds"]
--- utils/notifications.luau - Sistema de notificaciones con sonido integrado
+
 local NotifLib
 
 local function getNotif()
@@ -225,7 +219,6 @@ end
 local Notifications = {}
 
 function Notifications.Notify(title, description, time)
-    -- Reproducir sonido moderno de notificación
     Sounds.Play("Notification")
     
     local n = getNotif()
@@ -243,7 +236,6 @@ end)()
 Modules["features/esp/arrows"] = (function()
     local Config = Modules["core/config"]
     local ESPUtils = Modules["utils/esp_utils"]
--- features/test1/arrows.luau - ESP Out of View Arrows
 
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
@@ -358,7 +350,6 @@ end)()
 Modules["features/esp/bones"] = (function()
     local Config = Modules["core/config"]
     local ESPUtils = Modules["utils/esp_utils"]
--- features/test1/bones.luau - ESP Skeleton con personalización completa
 
 local Players = game:GetService("Players")
 local Camera = workspace.CurrentCamera
@@ -463,7 +454,6 @@ end)()
 Modules["features/esp/box"] = (function()
     local Config = Modules["core/config"]
     local ESPUtils = Modules["utils/esp_utils"]
--- features/test1/box.luau - ESP Box (2D y Corner)
 
 local Players = game:GetService("Players")
 local Camera = workspace.CurrentCamera
@@ -482,7 +472,6 @@ local function CreateBoxDrawing()
     box.Transparency = 1
     box.Visible = false
 
-    -- Líneas para Corner Box (8 líneas)
     local corners = {}
     for i = 1, 8 do
         local l = Drawing.new("Line")
@@ -552,25 +541,21 @@ local function ShowBox(player)
                 box.Visible = false
                 local cornerLength = width * 0.25
 
-                -- Top Left
                 cornerLines[1].From = Vector2.new(posX, posY)
                 cornerLines[1].To = Vector2.new(posX + cornerLength, posY)
                 cornerLines[2].From = Vector2.new(posX, posY)
                 cornerLines[2].To = Vector2.new(posX, posY + cornerLength)
 
-                -- Top Right
                 cornerLines[3].From = Vector2.new(posX + width, posY)
                 cornerLines[3].To = Vector2.new(posX + width - cornerLength, posY)
                 cornerLines[4].From = Vector2.new(posX + width, posY)
                 cornerLines[4].To = Vector2.new(posX + width, posY + cornerLength)
 
-                -- Bottom Left
                 cornerLines[5].From = Vector2.new(posX, posY + height)
                 cornerLines[5].To = Vector2.new(posX + cornerLength, posY + height)
                 cornerLines[6].From = Vector2.new(posX, posY + height)
                 cornerLines[6].To = Vector2.new(posX, posY + height - cornerLength)
 
-                -- Bottom Right
                 cornerLines[7].From = Vector2.new(posX + width, posY + height)
                 cornerLines[7].To = Vector2.new(posX + width - cornerLength, posY + height)
                 cornerLines[8].From = Vector2.new(posX + width, posY + height)
@@ -583,7 +568,6 @@ local function ShowBox(player)
                     l.Visible = true
                 end
             else
-                -- 2D Standard Box
                 for _, l in ipairs(cornerLines) do l.Visible = false end
                 box.Position = Vector2.new(posX, posY)
                 box.Size = Vector2.new(width, height)
@@ -620,7 +604,6 @@ end)()
 Modules["features/esp/health"] = (function()
     local Config = Modules["core/config"]
     local ESPUtils = Modules["utils/esp_utils"]
--- features/test1/health.luau - ESP Health Bar y HP Text
 
 local Players = game:GetService("Players")
 local Camera = workspace.CurrentCamera
@@ -701,7 +684,7 @@ local function ShowHealth(player)
             fill.Color = Color3.fromRGB(255 * (1 - healthPercent), 255 * healthPercent, 0)
             fill.Visible = true
 
-            txt.Position = Vector2.new(barX - 18, barY + (barHeight / 2) - 7)
+            txt.Position = Vector2.new(barX + barWidth + 2, barY + (barHeight / 2) - 7)
             txt.Font = Config.ESP.Player.TextFont or 2
             txt.Size = (Config.ESP.Player.TextSize or 14) - 2
             txt.Text = math.floor(hum.Health) .. " HP"
@@ -735,7 +718,6 @@ end)()
 Modules["features/esp/names"] = (function()
     local Config = Modules["core/config"]
     local ESPUtils = Modules["utils/esp_utils"]
--- features/test1/names.luau - ESP Player (Nombres, Distancia, Arma equipada)
 
 local Players = game:GetService("Players")
 local Camera = workspace.CurrentCamera
@@ -800,7 +782,6 @@ local function ShowPlayerESP(player)
         if onScreen then
             local yOffset = 0
 
-            -- Name ESP
             if Config.ESP.Player.Names then
                 nameTag.Position = Vector2.new(headPos.X, headPos.Y - yOffset)
                 nameTag.Text = player.DisplayName or player.Name
@@ -812,7 +793,6 @@ local function ShowPlayerESP(player)
                 nameTag.Visible = false
             end
 
-            -- Distance ESP
             if Config.ESP.Player.Distance then
                 local distMeters = math.floor(ESPUtils.GetDistance(hrp.Position))
                 distTag.Position = Vector2.new(feetPos.X, feetPos.Y + yOffset)
@@ -825,7 +805,6 @@ local function ShowPlayerESP(player)
                 distTag.Visible = false
             end
 
-            -- Weapon ESP
             if Config.ESP.Player.Weapon then
                 weaponTag.Position = Vector2.new(feetPos.X, feetPos.Y + yOffset)
                 weaponTag.Text = GetEquippedWeapon(player.Character)
@@ -864,14 +843,13 @@ end)()
 Modules["features/combat/silent"] = (function()
     local Config = Modules["core/config"]
     local Sounds = Modules["core/sounds"]
---[[ 
-    features/combat/silent.luau
-    Silent Aim con soporte para FOV, Hit Chance, HitSound selector, Team Check y partes R6/R15
---]]
-
 
 local Players = game:GetService("Players")
-local RS = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- FIX: Bullet ahora se define correctamente
+local Bullet = require(ReplicatedStorage.Components.Weapon.Classes.Bullet)
+
 local lp = Players.LocalPlayer
 
 local BodyPartsR6 = {
@@ -949,66 +927,56 @@ local function getTarget(cam, origin, range)
     return bestPart
 end
 
--- Hook en Bullet._performRaycast
-pcall(function()
-
-    local old
-    old = hookfunction(Bullet._performRaycast, function(self, spread)
-        local result = old(self, spread)
-        
-        if not Config.Combat.SilentAim then
-            return result
-        end
-        
-        local chance = Config.Combat.HitChance or 100
-        if math.random(1, 100) > chance then
-            return result
-        end
-        
-        local cam = workspace.CurrentCamera
-        if not cam then return result end
-        
-        local origin = cam.CFrame.Position
-        local range = (self.Properties and self.Properties.Range) or 500
-        local targetPart = getTarget(cam, origin, range)
-        
-        if not targetPart then return result end
-        
-        -- Reproducir el HitSound seleccionado (Gamesense, Neverlose, etc.)
-        local selectedSound = Config.Combat.HitSound or "Gamesense"
-        Sounds.Play(selectedSound)
-
-        local dir = (targetPart.Position - origin).Unit
-        result.Direction = dir
-        result.Distance = (targetPart.Position - origin).Magnitude
-        result.Hits = {
-            {
-                Position = targetPart.Position,
-                Instance = targetPart,
-                Material = "Plastic",
-                Normal = -dir,
-                Exit = false
-            }
-        }
+local old
+old = hookfunction(Bullet._performRaycast, function(self, spread)
+    local result = old(self, spread)
+    
+    if not Config.Combat.SilentAim then
         return result
-    end)
+    end
+    
+    local chance = Config.Combat.HitChance or 100
+    if math.random(1, 100) > chance then
+        return result
+    end
+    
+    local cam = workspace.CurrentCamera
+    if not cam then return result end
+    
+    local origin = cam.CFrame.Position
+    local range = (self.Properties and self.Properties.Range) or 500
+    local targetPart = getTarget(cam, origin, range)
+    
+    if not targetPart then return result end
+    
+    local selectedSound = Config.Combat.HitSound or "Gamesense"
+    Sounds.Play(selectedSound)
+
+    local dir = (targetPart.Position - origin).Unit
+    result.Direction = dir
+    result.Distance = (targetPart.Position - origin).Magnitude
+    result.Hits = {
+        {
+            Position = targetPart.Position,
+            Instance = targetPart,
+            Material = "Plastic",
+            Normal = -dir,
+            Exit = false
+        }
+    }
+    return result
 end)
+
 end)()
 
 -- 11. FEATURES / COMBAT / AIMBOT
 Modules["features/combat/aimbot"] = (function()
     local Config = Modules["core/config"]
-    local ESPUtils = Modules["utils/esp_utils"]
---[[ 
-    features/combat/aimbot.luau
-    Aimbot con suavizado (Smoothness) y múltiples métodos de apunte (Cámara / Mouse)
---]]
-
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local Camera = workspace.CurrentCamera
-local RS = game:GetService("RunService")
+local RunService = game:GetService("RunService")
 local lp = Players.LocalPlayer
 
 local BodyParts = {
@@ -1021,6 +989,31 @@ local BodyParts = {
     ["Left Leg"] = {"Left Leg", "LeftUpperLeg"},
     ["Right Leg"] = {"Right Leg", "RightUpperLeg"}
 }
+
+local function isTeamMate(player)
+    if player == lp then return true end
+    if not Config.Combat.Aimbot.TeamCheck then return false end
+    local team = player:GetAttribute("Team") or (player.Team and player.Team.Name)
+    local myteam = lp:GetAttribute("Team") or (lp.Team and lp.Team.Name)
+    if workspace:GetAttribute("Gamemode") == "Deathmatch" then return false end
+    return team ~= nil and myteam ~= nil and team == myteam
+end
+
+-- FIX: VisibleCheck ahora lee Config.Combat.Aimbot.VisibleCheck en vez de Config.ESP.VisibleCheck
+local function isVisible(part, character)
+    if not Config.Combat.Aimbot.VisibleCheck then return true end
+    if not part or not character then return false end
+    local origin = Camera.CFrame.Position
+    local direction = (part.Position - origin)
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+    raycastParams.FilterDescendantsInstances = {Camera, lp.Character}
+    local result = workspace:Raycast(origin, direction, raycastParams)
+    if result then
+        return result.Instance:IsDescendantOf(character)
+    end
+    return true
+end
 
 local function getTargetPart(char)
     if not char then return nil end
@@ -1040,12 +1033,12 @@ local function getClosestPlayerToCursor()
     local mousePos = UserInputService:GetMouseLocation()
 
     for _, plr in ipairs(Players:GetPlayers()) do
-        if plr ~= lp and not ESPUtils.IsTeamMate(plr) and plr.Character then
+        if plr ~= lp and not isTeamMate(plr) and plr.Character then
             local char = plr.Character
             local hum = char:FindFirstChildOfClass("Humanoid")
             if hum and hum.Health > 0 then
                 local part = getTargetPart(char)
-                if part and ESPUtils.IsVisible(part, char) then
+                if part and isVisible(part, char) then
                     local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
                     if onScreen then
                         local screenVec = Vector2.new(screenPos.X, screenPos.Y)
@@ -1063,7 +1056,6 @@ local function getClosestPlayerToCursor()
     return closestPart
 end
 
--- Listener para mantener presionado clic derecho (o apuntar)
 UserInputService.InputBegan:Connect(function(input, gpe)
     if gpe then return end
     if input.UserInputType == Enum.UserInputType.MouseButton2 then
@@ -1077,8 +1069,7 @@ UserInputService.InputEnded:Connect(function(input)
     end
 end)
 
--- Bucle de renderizado para apunte suave
-RS.RenderStepped:Connect(function()
+RunService.RenderStepped:Connect(function()
     if not Config.Combat.Aimbot.Enabled or not Config.Combat.Aimbot.Aiming then return end
 
     local targetPart = getClosestPlayerToCursor()
@@ -1088,12 +1079,9 @@ RS.RenderStepped:Connect(function()
     local aimType = Config.Combat.Aimbot.Type or "Camera"
 
     if aimType == "Camera" then
-        -- Apunte mediante CFrame de la cámara (interpolación suave)
         local targetCFrame = CFrame.lookAt(Camera.CFrame.Position, targetPart.Position)
         Camera.CFrame = Camera.CFrame:Lerp(targetCFrame, 1 / smoothness)
-
     elseif aimType == "Mouse" then
-        -- Apunte mediante movimiento de cursor/ratón (mousemoverel si el inyector lo soporta)
         local screenPos, _ = Camera:WorldToViewportPoint(targetPart.Position)
         local mousePos = UserInputService:GetMouseLocation()
         local moveVec = (Vector2.new(screenPos.X, screenPos.Y) - mousePos) / smoothness
@@ -1101,7 +1089,6 @@ RS.RenderStepped:Connect(function()
         if mousemoverel then
             mousemoverel(moveVec.X, moveVec.Y)
         else
-            -- Fallback a CFrame si mousemoverel no está presente
             local targetCFrame = CFrame.lookAt(Camera.CFrame.Position, targetPart.Position)
             Camera.CFrame = Camera.CFrame:Lerp(targetCFrame, 1 / smoothness)
         end
@@ -1112,13 +1099,8 @@ end)()
 -- 12. FEATURES / MISC / SKINS
 Modules["features/misc/skins"] = (function()
     local Config = Modules["core/config"]
---[[ 
-    features/misc/skins.luau
-    Lógica de SkinChanger y Custom Knife para Blox Strike integrada en Akiri Hub
---]]
 
-
-local RS = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local CAS = game:GetService("ContextActionService")
@@ -1129,12 +1111,10 @@ local camera = workspace.CurrentCamera
 
 local Characters = workspace:WaitForChild("Characters", 5)
 
--- Desactivar luz original de Karambit si existe
 pcall(function()
-    RS.Assets.Weapons.Karambit.Camera.ViewmodelLight.Transparency = 1
+    ReplicatedStorage.Assets.Weapons.Karambit.Camera.ViewmodelLight.Transparency = 1
 end)
 
--- Offsets para cuchillos
 local knives = {
     ["Karambit"]       = {Offset = CFrame.new(0, -1.5, 1.5)},
     ["Butterfly Knife"] = {Offset = CFrame.new(0, -1.5, 1.5)},
@@ -1192,7 +1172,7 @@ end
 
 local function playSound(folder, name)
     local selectedKnife = Config.SkinChanger.SelectedKnife
-    local weaponSounds = RS.Sounds:FindFirstChild(selectedKnife)
+    local weaponSounds = ReplicatedStorage.Sounds:FindFirstChild(selectedKnife)
     if not weaponSounds then return end
 
     local soundFolder = weaponSounds:FindFirstChild(folder)
@@ -1306,7 +1286,7 @@ local function spawnViewmodel(knife)
     spawned = true
     local selectedKnife = Config.SkinChanger.SelectedKnife
 
-    local weaponsFolder = RS:FindFirstChild("Assets") and RS.Assets:FindFirstChild("Weapons")
+    local weaponsFolder = ReplicatedStorage:FindFirstChild("Assets") and ReplicatedStorage.Assets:FindFirstChild("Weapons")
     if not weaponsFolder then return end
 
     local knifeTemplate = weaponsFolder:FindFirstChild(selectedKnife)
@@ -1329,7 +1309,7 @@ local function spawnViewmodel(knife)
             attachAsset(tGloves, "Right Arm", "Right Arm", "Glove", CFrame.new(0, 0, -1.5))
         end
     else
-        local sleeves  = RS.Assets:FindFirstChild("Sleeves") and RS.Assets.Sleeves:FindFirstChild("IDF")
+        local sleeves  = ReplicatedStorage.Assets:FindFirstChild("Sleeves") and ReplicatedStorage.Assets.Sleeves:FindFirstChild("IDF")
         local ctGloves = weaponsFolder:FindFirstChild("CT Glove")
 
         if sleeves and ctGloves then
@@ -1343,7 +1323,7 @@ local function spawnViewmodel(knife)
     local animController = vm:FindFirstChildOfClass("AnimationController") or vm:FindFirstChildOfClass("Animator")
     animator = animController and (animController:FindFirstChildWhichIsA("Animator") or animController)
 
-    local animFolder = RS.Assets:FindFirstChild("WeaponAnimations") and RS.Assets.WeaponAnimations:FindFirstChild(selectedKnife) and RS.Assets.WeaponAnimations[selectedKnife]:FindFirstChild("CameraAnimations")
+    local animFolder = ReplicatedStorage.Assets:FindFirstChild("WeaponAnimations") and ReplicatedStorage.Assets.WeaponAnimations:FindFirstChild(selectedKnife) and ReplicatedStorage.Assets.WeaponAnimations[selectedKnife]:FindFirstChild("CameraAnimations")
 
     if animFolder and animator then
         equipAnim      = animFolder:FindFirstChild("Equip") and animator:LoadAnimation(animFolder.Equip)
@@ -1381,7 +1361,6 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- Task para vigilar spawns de cuchillo
 task.spawn(function()
     while true do
         local living = isAlive()
@@ -1397,12 +1376,8 @@ task.spawn(function()
     end
 end)
 
--- ==========================================
--- LÓGICA DE SKIN CHANGER (SKINS DE ARMAS/GUANTES)
--- ==========================================
-
 local GLOVES = { ["Sports Gloves"] = true }
-local SkinsFolder = RS:FindFirstChild("Assets") and RS.Assets:FindFirstChild("Skins")
+local SkinsFolder = ReplicatedStorage:FindFirstChild("Assets") and ReplicatedStorage.Assets:FindFirstChild("Skins")
 
 local function applyWeaponSkin(model)
     if not model or not Config.SkinChanger.Enabled or not isAlive() or not SkinsFolder then return end
@@ -1499,15 +1474,8 @@ end)()
 local Config = Modules["core/config"]
 local Notif = Modules["utils/notifications"]
 
--- main.luau - Akiri Hub con WindUI Library (Sintaxis Oficial)
-
-
--- Inicializar Módulos de Combate, ESP y Misc
-
--- Cargar WindUI Library
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
 
--- Crear Ventana Principal
 local Window = WindUI:CreateWindow({
     Title = "Akiri Hub",
     Icon = "crosshair",
@@ -1525,7 +1493,6 @@ local TabCombat = Window:Tab({
     Icon = "swords"
 })
 
--- Section Aimbot
 local SectionAimbot = TabCombat:Section({
     Title = "Aimbot (Hold Right Click)"
 })
@@ -1550,9 +1517,8 @@ SectionAimbot:Dropdown({
 
 SectionAimbot:Slider({
     Title = "Smoothness",
-    Min = 1,
-    Max = 20,
-    Value = Config.Combat.Aimbot.Smoothness,
+    Value = { Min = 1, Max = 20, Default = Config.Combat.Aimbot.Smoothness },
+    Step = 1,
     Callback = function(val)
         Config.Combat.Aimbot.Smoothness = val
     end
@@ -1569,15 +1535,13 @@ SectionAimbot:Dropdown({
 
 SectionAimbot:Slider({
     Title = "Aimbot FOV",
-    Min = 5,
-    Max = 180,
-    Value = Config.Combat.Aimbot.FOV,
+    Value = { Min = 5, Max = 180, Default = Config.Combat.Aimbot.FOV },
+    Step = 1,
     Callback = function(value)
         Config.Combat.Aimbot.FOV = value
     end
 })
 
--- Section Silent Aim
 local SectionSilent = TabCombat:Section({
     Title = "Silent Aim"
 })
@@ -1593,9 +1557,8 @@ SectionSilent:Toggle({
 
 SectionSilent:Slider({
     Title = "Hit Chance (%)",
-    Min = 0,
-    Max = 100,
-    Value = Config.Combat.HitChance,
+    Value = { Min = 0, Max = 100, Default = Config.Combat.HitChance },
+    Step = 1,
     Callback = function(val)
         Config.Combat.HitChance = val
     end
@@ -1629,9 +1592,8 @@ SectionSilent:Dropdown({
 
 SectionSilent:Slider({
     Title = "Silent FOV Radius",
-    Min = 5,
-    Max = 180,
-    Value = Config.Combat.FOV,
+    Value = { Min = 5, Max = 180, Default = Config.Combat.FOV },
+    Step = 1,
     Callback = function(value)
         Config.Combat.FOV = value
     end
@@ -1645,7 +1607,6 @@ local TabESP = Window:Tab({
     Icon = "eye"
 })
 
--- General ESP
 local SectionGeneral = TabESP:Section({ Title = "General" })
 
 SectionGeneral:Toggle({
@@ -1667,9 +1628,8 @@ SectionGeneral:Toggle({
 
 SectionGeneral:Slider({
     Title = "Max Distance",
-    Min = 100,
-    Max = 5000,
-    Value = Config.ESP.MaxDistance,
+    Value = { Min = 100, Max = 5000, Default = Config.ESP.MaxDistance },
+    Step = 50,
     Callback = function(val)
         Config.ESP.MaxDistance = val
     end
@@ -1683,7 +1643,6 @@ SectionGeneral:Toggle({
     end
 })
 
--- Box ESP
 local SectionBox = TabESP:Section({ Title = "Box" })
 
 SectionBox:Toggle({
@@ -1713,9 +1672,8 @@ SectionBox:Colorpicker({
 
 SectionBox:Slider({
     Title = "Box Thickness",
-    Min = 1,
-    Max = 5,
-    Value = Config.ESP.Box.Thickness,
+    Value = { Min = 1, Max = 5, Default = Config.ESP.Box.Thickness },
+    Step = 1,
     Callback = function(val)
         Config.ESP.Box.Thickness = val
     end
@@ -1723,15 +1681,13 @@ SectionBox:Slider({
 
 SectionBox:Slider({
     Title = "Box Transparency",
-    Min = 0.1,
-    Max = 1,
-    Value = Config.ESP.Box.Transparency,
+    Value = { Min = 0.1, Max = 1, Default = Config.ESP.Box.Transparency },
+    Step = 0.1,
     Callback = function(val)
         Config.ESP.Box.Transparency = val
     end
 })
 
--- Player ESP
 local SectionPlayer = TabESP:Section({ Title = "Player" })
 
 SectionPlayer:Toggle({
@@ -1774,7 +1730,6 @@ SectionPlayer:Colorpicker({
     end
 })
 
--- Skeleton ESP
 local SectionSkeleton = TabESP:Section({ Title = "Skeleton" })
 
 SectionSkeleton:Toggle({
@@ -1795,9 +1750,8 @@ SectionSkeleton:Colorpicker({
 
 SectionSkeleton:Slider({
     Title = "Skeleton Thickness",
-    Min = 1,
-    Max = 5,
-    Value = Config.ESP.Skeleton.Thickness,
+    Value = { Min = 1, Max = 5, Default = Config.ESP.Skeleton.Thickness },
+    Step = 1,
     Callback = function(val)
         Config.ESP.Skeleton.Thickness = val
     end
@@ -1805,15 +1759,13 @@ SectionSkeleton:Slider({
 
 SectionSkeleton:Slider({
     Title = "Skeleton Transparency",
-    Min = 0.1,
-    Max = 1,
-    Value = Config.ESP.Skeleton.Transparency,
+    Value = { Min = 0.1, Max = 1, Default = Config.ESP.Skeleton.Transparency },
+    Step = 0.1,
     Callback = function(val)
         Config.ESP.Skeleton.Transparency = val
     end
 })
 
--- Misc ESP
 local SectionMisc = TabESP:Section({ Title = "Misc" })
 
 SectionMisc:Toggle({
@@ -1880,4 +1832,4 @@ SectionKnives:Dropdown({
     end
 })
 
-print("[Akiri Hub] Interfaz convertida a la API nativa de WindUI con éxito.")
+print("[Akiri Hub] Cargado correctamente.")
